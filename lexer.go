@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"unicode"
@@ -45,7 +44,7 @@ func tokenize(peeker *peeker[rune]) ([]token, error) {
 			currentCol = 0
 		}
 
-		currentCol += skipWhitespacesAndNewLines(peeker)
+		skipWhitespacesAndNewLines(peeker)
 		if peeker.peek() == nil {
 			break
 		}
@@ -71,23 +70,28 @@ func tokenize(peeker *peeker[rune]) ([]token, error) {
 			continue
 		}
 
-		return nil, errors.New(fmt.Sprintf("Wasn't able to parse token at position - row %d, col %d", currentRow, currentCol))
+		return nil, fmt.Errorf(
+			"wasn't able to parse token at position - row %d, col %d",
+			currentRow+1, currentCol+1)
 	}
 
-	currentRow += skipWhitespacesAndNewLines(peeker)
+	skipWhitespacesAndNewLines(peeker)
 	return tokens, nil
 }
 
-func skipWhitespacesAndNewLines(peeker *peeker[rune]) int {
-	countSkiped := 0
+func skipWhitespacesAndNewLines(peeker *peeker[rune]) {
 	nextRune := peeker.peek()
 	for nextRune != nil && (unicode.IsSpace(*nextRune)) {
+		if *nextRune == '\n' {
+			currentRow++
+			currentCol = 0
+		} else {
+			currentCol++
+		}
+
 		peeker.next()
 		nextRune = peeker.peek()
-		countSkiped++
 	}
-
-	return countSkiped
 }
 
 func readBrackets(peeker *peeker[rune]) (*token, int) {
@@ -191,7 +195,7 @@ func readLiteral(peeker *peeker[rune]) ([]token, int) {
 	}
 
 	runes := make([]rune, 0)
-	for unicode.IsDigit(*nextRune) || *nextRune == '.' {
+	for unicode.IsDigit(*nextRune) || unicode.IsLetter(*nextRune) || *nextRune == '.' {
 		runes = append(runes, *nextRune)
 		countRead++
 		peeker.next()
