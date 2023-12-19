@@ -14,8 +14,15 @@ const (
 	closeSquareBracket = "']'"
 )
 
-func parse(peeker *peeker[token]) (map[string]interface{}, error) {
-	return parseObject(peeker)
+func parse(peeker *peeker[token]) (interface{}, error) {
+	nextToken := peeker.peek()
+	if nextToken.kind == curlyBracket {
+		return parseObject(peeker)
+	} else if nextToken.kind == squareBracket {
+		return parseSlice(peeker)
+	}
+
+	return nil, fmt.Errorf("unknown root element, expected either Object {} or Array, got %s instead", nextToken.value)
 }
 
 func parseObject(peeker *peeker[token]) (map[string]interface{}, error) {

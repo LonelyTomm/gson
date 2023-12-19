@@ -1,6 +1,6 @@
 package main
 
-func Decode(runes []rune) (map[string]interface{}, error) {
+func Decode(runes []rune) (interface{}, error) {
 	var err error
 
 	runePeeker := newPeeker[rune](runes)

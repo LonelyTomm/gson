@@ -14,7 +14,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(res["second"].(float64) + res["third"].(float64))
+	fmt.Println(res.([]interface{})[0].(float64) + res.([]interface{})[1].(float64))
 }
 
 func readRunesFromFile(fileName string) []rune {

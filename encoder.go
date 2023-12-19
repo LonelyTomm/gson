@@ -4,8 +4,15 @@ import (
 	"fmt"
 )
 
-func Encode(source map[string]interface{}) string {
-	return encodeMap(source)
+func Encode(source interface{}) string {
+	switch source := source.(type) {
+	case map[string]interface{}:
+		return encodeMap(source)
+	case []interface{}:
+		return encodeSlice(source)
+	}
+
+	return ""
 }
 
 func encodeMap(source map[string]interface{}) string {
