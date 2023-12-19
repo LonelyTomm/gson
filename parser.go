@@ -170,8 +170,8 @@ func parseUnqoutedLiteral(peeker *peeker[token]) (interface{}, error) {
 }
 
 func createErrorWrongToken(possibleTokens string, token *token) error {
-	errorMessage := fmt.Sprintf(
+	err := fmt.Errorf(
 		"was expecting %s token at position row %d col %d, got %s instead",
 		possibleTokens, token.positionRow+1, token.positionCol+1, token.value)
-	return errors.New(errorMessage)
+	return err
 }

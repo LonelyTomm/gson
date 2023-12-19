@@ -4,17 +4,17 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 func main() {
 	runes := readRunesFromFile("input.json")
-	runePeeker := newPeeker[rune](runes)
-	tokens, _ := tokenize(runePeeker)
+	res, err := Decode(runes)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
-	tkPeeker := newPeeker[token](tokens)
-	res, err := parse(tkPeeker)
-	fmt.Println("Number of tokens " + strconv.Itoa(len(res)) + err.Error())
+	fmt.Println(res["second"].(float64) + res["third"].(float64))
 }
 
 func readRunesFromFile(fileName string) []rune {
