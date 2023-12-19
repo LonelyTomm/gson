@@ -1,4 +1,4 @@
-package main
+package gson
 
 type peeker[T any] struct {
 	data            []T

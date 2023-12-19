@@ -1,4 +1,4 @@
-package main
+package gson
 
 func Decode(runes []rune) (interface{}, error) {
 	var err error
